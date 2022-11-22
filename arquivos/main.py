@@ -8,6 +8,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
+from imblearn.over_sampling import SMOTE
 
 DATASET_PATH = "data/heart_2020_cleaned.csv"
 
@@ -242,10 +243,20 @@ def main():
         heart.drop('Unnamed: 0', axis=1, inplace=True)
         X_train, X_test, y_train, y_test = train_test_split(heart.drop('HeartDisease',axis=1), heart['HeartDisease'], test_size=0.40, random_state=101)
 
+        #Talvez nao preciseX_train,X_test,y_train,y_test=train_test_split(x, y, train_size=0.8, stratify = y, random_state=100)
+        #Scaler_X = StandardScaler()
+        #X_train = Scaler_X.fit_transform(X_train)
+        #X_test = Scaler_X.transform(X_test)
 
+        #counter = Counter(y_train)
+        #print('Before',counter)
+
+        smt = SMOTE()
+
+        X_train_sm, y_train_sm = smt.fit_resample(X_train, y_train)
         logmodel = LogisticRegression(solver='lbfgs',max_iter=1000)
 
-        logmodel.fit(X_train,y_train)
+        logmodel.fit(X_train_sm,y_train_sm)
 
         predictions = logmodel.predict(X_test)
 
