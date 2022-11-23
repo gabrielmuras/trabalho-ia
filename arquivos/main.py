@@ -9,7 +9,10 @@ from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from imblearn.over_sampling import SMOTE
+import logging
+from datetime import datetime
 
+logging.basicConfig(level=logging.INFO)
 DATASET_PATH = "data/heart_2020_cleaned.csv"
 
 
@@ -98,7 +101,13 @@ def main():
             AgeCategory = 75
         elif age_cat > 76 and age_cat <= 999:
             AgeCategory = 80
-        BMI = st.sidebar.number_input("IMC", 12, 40, 22)
+        altura = st.sidebar.number_input("Altura em metros", min_value=0.6, value=1.50, max_value=2.40)
+        peso = st.sidebar.number_input("Peso em kg", min_value=1,value=50, max_value=600)
+        try:
+          BMI = round(peso/(altura * altura))
+          st.write('Seu IMC é: ', BMI)
+        except:
+          st.write('Inserir uma altura e peso válidos')
         SleepTime = st.sidebar.number_input("Quantas horas você dorme por dia?", 0, 24, 7)
         gen_health = st.sidebar.selectbox("Como você pode definir sua saúde geral?",
                                           options=("Excelente","Muito bom","Bom","Razoável","Ruim"))
@@ -215,7 +224,7 @@ def main():
     )
 
     st.title("Previsão de doenças cardíacas")
-    st.subheader("Nesse semestre nosso grupo teve como objetivo fazer uma análise usando IA de uma tabela e realizar um relatório com o que foi analisado! "
+    st.subheader("Nesse semestre nosso grupo teve como objetivo fazer uma análise de um dataset e realizar um relatório com o que foi analisado! Nesse site utilizamos inteligência artificial para fazer uma regressão logística e tentar prever a chance de ter alguma doença cardíaca "
                  )
 
     col1, col2 = st.columns([1, 3])
@@ -234,7 +243,7 @@ def main():
         2. Pressione o botão "Prever" e aguarde o resultado.
         """)
     heart = load_dataset()
-    # log_model = pickle.load(open(LOG_MODEL_PATH, "rb"))
+
     x = user_input_features()
 
     if submit:
@@ -242,18 +251,12 @@ def main():
 
         heart.drop('Unnamed: 0', axis=1, inplace=True)
         X_train, X_test, y_train, y_test = train_test_split(heart.drop('HeartDisease',axis=1), heart['HeartDisease'], test_size=0.40, random_state=101)
-
-        #Talvez nao preciseX_train,X_test,y_train,y_test=train_test_split(x, y, train_size=0.8, stratify = y, random_state=100)
-        #Scaler_X = StandardScaler()
-        #X_train = Scaler_X.fit_transform(X_train)
-        #X_test = Scaler_X.transform(X_test)
-
-        #counter = Counter(y_train)
-        #print('Before',counter)
-
+        logging.info('Iniciando os testes')
+        #smote equalizando a base
         smt = SMOTE()
-
+        logging.info('Aplicando o SMOTE')
         X_train_sm, y_train_sm = smt.fit_resample(X_train, y_train)
+        logging.info('Aplicando a regressão logistica')
         logmodel = LogisticRegression(solver='lbfgs',max_iter=1000)
 
         logmodel.fit(X_train_sm,y_train_sm)
@@ -261,25 +264,29 @@ def main():
         predictions = logmodel.predict(X_test)
 
         conf_mat = confusion_matrix(y_test, predictions)
+        logging.info('Predicitons finalizadas')
 
-        # print(heart.columns)
 
         EXEMPLO = np.array(x).reshape((1,-1))
         print("INIT",x,"FINISH")
 
-        # ([22,20,0,24,7,1,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,1])
 
         print("EXEMPLO: {}".format(logmodel.predict(EXEMPLO)[0]))
         prediction = logmodel.predict(EXEMPLO)[0]
-        # prediction = 0
+
         if prediction == 0:
             st.markdown(f"**Aparentemente você NÃO tem indicios de doença cardiaca")
             st.image("images/heart-okay.jpg",
                      caption="Seu coração parece estar bem! - Mas lembre-se isso não é um diagnostico, procure sempre um medico!")
+            st.markdown("Classification Report da regressão logística")
+            st.table(pd.DataFrame(classification_report(y_test, predictions, output_dict=True)).transpose())
+            logging.info("Output gerado")
         else:
             st.markdown(f"**Aparentemente você TEM indicios de doença cardiaca")
             st.image("images/heart-bad.jpg",
                      caption="Você deve tomar cuidado, há indicios de que pode ter algum problema de coração! - Procure um medico e sempre o mantanha informado sobre suas condições!")
-
+            st.markdown("Classification Report da regressão logística")
+            st.table(pd.DataFrame(classification_report(y_test, predictions, output_dict=True)).transpose())
+            logging.info("Output gerado")
 if __name__ == "__main__":
     main()
