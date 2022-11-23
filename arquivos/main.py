@@ -239,7 +239,7 @@ def main():
         Contribuir com a prevenção de doenças cardíacas através do mapeamento das principais características identificadas como ofensivas da incidência deste tipo de doença.
 
         Para usar a ferramenta é fácil!
-        1. Insira os dados que melhor descreve você
+        1. Insira os dados que melhor te descrevem.
         2. Pressione o botão "Prever" e aguarde o resultado.
         """)
     heart = load_dataset()
