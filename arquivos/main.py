@@ -146,13 +146,13 @@ def main():
         MentalHealth = st.sidebar.number_input("Por quantos dias durante os últimos 30 dias"
                                               " sua saúde mental não estava boa?", 0, 30, 0)
         phys_act = st.sidebar.selectbox("Você praticou algum tipo de esporte (corrida, academia, etc.)"
-                                        " no ultimo mes?", options=("Não", "Sim"))
+                                        " no ultimo mês?", options=("Não", "Sim"))
         if phys_act == "Sim":
             PhysicalActivity = 1
         else:
             PhysicalActivity = 0
         smoking = st.sidebar.selectbox("Você fumou pelo menos 100 cigarros em"
-                                       " toda a sua vida (aprox. 5 pacotes)?)",
+                                       " toda a sua vida (aprox. 5 pacotes)?",
                                        options=("Não", "Sim"))
         if smoking == "Sim":
             Smoking = 1
