@@ -26,7 +26,7 @@ def main():
                                 columns=heart_df.columns)
         return heart_df
     def user_input_features():
-        race = st.sidebar.selectbox("Raça", options=("Indígena","Asiatico","Preta","Hispânico","Branca","Outros",))
+        race = st.sidebar.selectbox("Etnia", options=("Indígena","Asiatico","Preta","Hispânico","Branca","Outros",))
         if race == "Indígena":
             AmericanIndianAlaskanNative=1
             Asian=0
@@ -69,7 +69,7 @@ def main():
             Hispanic=0
             OtherRace=1
             White=0
-        sex = st.sidebar.selectbox("Sexo", options=("Masculino","Feminino"))
+        sex = st.sidebar.selectbox("Gênero", options=("Masculino","Feminino"))
         if sex == "Masculino":
             Male = 1
         else:
@@ -79,27 +79,27 @@ def main():
             AgeCategory = 18
         elif age_cat > 18 and age_cat <= 25:
             AgeCategory = 25
-        elif age_cat > 26 and age_cat <= 30:
+        elif age_cat >= 26 and age_cat <= 30:
             AgeCategory = 30
-        elif age_cat > 31 and age_cat <= 35:
+        elif age_cat >= 31 and age_cat <= 35:
             AgeCategory = 35
-        elif age_cat > 36 and age_cat <= 40:
+        elif age_cat >= 36 and age_cat <= 40:
             AgeCategory = 40
-        elif age_cat > 41 and age_cat <= 45:
+        elif age_cat >= 41 and age_cat <= 45:
             AgeCategory = 45
-        elif age_cat > 46 and age_cat <= 50:
+        elif age_cat >= 46 and age_cat <= 50:
             AgeCategory = 50
-        elif age_cat > 51 and age_cat <= 55:
+        elif age_cat >= 51 and age_cat <= 55:
             AgeCategory = 55
-        elif age_cat > 56 and age_cat <= 60:
+        elif age_cat >= 56 and age_cat <= 60:
             AgeCategory = 60
-        elif age_cat > 61 and age_cat <= 65:
+        elif age_cat >= 61 and age_cat <= 65:
             AgeCategory = 65
-        elif age_cat > 66 and age_cat <= 70:
+        elif age_cat >= 66 and age_cat <= 70:
             AgeCategory = 70
-        elif age_cat > 71 and age_cat <= 75:
+        elif age_cat >= 71 and age_cat <= 75:
             AgeCategory = 75
-        elif age_cat > 76 and age_cat <= 999:
+        elif age_cat >= 76 and age_cat <= 999:
             AgeCategory = 80
         altura = st.sidebar.number_input("Altura em metros", min_value=0.6, value=1.50, max_value=2.40)
         peso = st.sidebar.number_input("Peso em kg", min_value=1,value=50, max_value=600)
